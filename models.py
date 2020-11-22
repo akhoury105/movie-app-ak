@@ -23,7 +23,7 @@ Contains title and date released
 
 '''
 class Movie(db.Model):
-    __tablename__ = 'Movies'
+    __tablename__ = 'movies'
 
     id = Column(Integer, primary_key=True)
     title = Column(String)
@@ -39,7 +39,7 @@ Contains actor's name, birthdate, and gender
 
 '''
 class Actor(db.Model):
-    __tablename__ = 'Actors'
+    __tablename__ = 'actors'
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
