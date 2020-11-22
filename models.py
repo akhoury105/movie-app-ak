@@ -46,7 +46,7 @@ class Actor(db.Model):
     gender = Column(String)
     birthdate = Column(Date)
 
-    def __init__(self, name, gener, birthdate):
+    def __init__(self, name, gender, birthdate):
         self.name = name
         self.gender = gender
         self.birthdate = birthdate
