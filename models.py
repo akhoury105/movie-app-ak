@@ -33,6 +33,17 @@ class Movie(db.Model):
         self.title = title
         self.release = release
 
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def format(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'release': self.release
+        }
+
 '''
 Actor Class
 Contains actor's name, birthdate, and gender

@@ -1,5 +1,5 @@
-from flask import Flask, jsonify
-from models import setup_db
+from flask import Flask, jsonify, request, abort
+from models import setup_db, Movie, Actor
 import json
 
 def create_app():
@@ -12,6 +12,30 @@ def create_app():
 app = create_app()
 
 
+#ENDPOINTS
+
+
+#POST ENDPOINTS
+@app.route('/movies', methods=['POST'])
+def post_movie():
+    try:
+        body = request.get_json()
+        title = body.get('title')
+        release = body.get('release')
+        if not body:
+            abort(404)
+        movie = Movie(title=title, release=release)
+        movie.insert()
+
+        return jsonify({
+            'success': True,
+            'movie': movie.format()
+        })
+    except:
+        abort(422)
+
+
+#ERROR HANDLERS
 @app.errorhandler(422)
 def unprocessable(error):
     return jsonify({
