@@ -13,11 +13,17 @@ app = create_app()
 
 
 #ENDPOINTS
+@app.route('/movies', methods=['GET'])
+def get_movies():
+    selection = Movie.query.all()
+    movies = [movie.format() for movie in selection]
+    return jsonify({
+        'success': True,
+        'movies': movies
+    })
 
-
-#POST ENDPOINTS
 @app.route('/movies', methods=['POST'])
-def post_movie():
+def add_movies():
     body = {}
     body = request.get_json()
     if not body:
