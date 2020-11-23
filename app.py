@@ -18,13 +18,14 @@ app = create_app()
 #POST ENDPOINTS
 @app.route('/movies', methods=['POST'])
 def post_movie():
+    body = {}
+    body = request.get_json()
+    if not body:
+        abort(404)
+    title = body.get('title')
+    release = body.get('release')
+    movie = Movie(title=title, release=release)
     try:
-        body = request.get_json()
-        title = body.get('title')
-        release = body.get('release')
-        if not body:
-            abort(404)
-        movie = Movie(title=title, release=release)
         movie.insert()
 
         return jsonify({
