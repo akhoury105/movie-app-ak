@@ -57,7 +57,22 @@ class Actor(db.Model):
     gender = Column(String)
     birthdate = Column(Date)
 
+
     def __init__(self, name, gender, birthdate):
         self.name = name
         self.gender = gender
         self.birthdate = birthdate
+
+
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+
+    def format(self):
+        return{
+            'id': self.id,
+            'name': self.name,
+            'birthdate': self.birthdate,
+            'gender': self.gender
+        }

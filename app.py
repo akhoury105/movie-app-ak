@@ -36,6 +36,27 @@ def post_movie():
         abort(422)
 
 
+@app.route('/actors', methods=['POST'])
+def post_actor():
+    body = {}
+    body = request.get_json()
+    if not body:
+        abort(404)
+    name = body.get('name')
+    birthdate = body.get('birthdate')
+    gender = body.get('gender')
+    actor = Actor(name=name, birthdate=birthdate, gender=gender)
+    try:
+        actor.insert()
+
+        return jsonify({
+            'success': True,
+            'actor': actor.format()
+        })
+    except:
+        abort(422)
+
+
 #ERROR HANDLERS
 @app.errorhandler(422)
 def unprocessable(error):
