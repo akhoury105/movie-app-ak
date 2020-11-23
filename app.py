@@ -42,6 +42,16 @@ def add_movies():
         abort(422)
 
 
+@app.route('/actors', methods=['GET'])
+def get_actors():
+    selection = Actor.query.all()
+    actors = [actor.format() for actor in selection]
+    return jsonify({
+        'success': True,
+        'actors': actors
+    })
+
+
 @app.route('/actors', methods=['POST'])
 def post_actor():
     body = {}
