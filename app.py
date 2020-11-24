@@ -98,6 +98,29 @@ def post_actor():
         abort(422)
 
 
+@app.route('/actors/<int:id>', methods=['PATCH'])
+def update_actor(id):
+    body = request.get_json()
+    actor = Actor.query.filter(Actor.id == id).one_or_none()
+    if actor is None:
+        abort(404)
+    else:
+        if 'name' in body:
+            actor.name = body.get('name')
+        if 'birthdate' in body:
+            actor.birthdate = body.get('birthdate')
+        if 'gender' in body:
+            actor.gender = body.get('gender')
+        try:
+            actor.update()
+            return jsonify({
+                'success': True,
+                'actor': actor.format()
+            })
+        except:
+            abort(422)
+
+
 #ERROR HANDLERS
 @app.errorhandler(422)
 def unprocessable(error):
