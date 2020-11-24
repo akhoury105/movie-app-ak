@@ -46,7 +46,7 @@ def add_movies():
 
 
 @app.route('/movies/<int:id>', methods=['PATCH'])
-def edit_movies(id):
+def edit_movie(id):
     body = request.get_json()
     movie = Movie.query.filter(Movie.id == id).one_or_none()
     if movie is None:
@@ -61,6 +61,22 @@ def edit_movies(id):
             return jsonify({
                 'success': True,
                 'movie': movie.format()
+            })
+        except:
+            abort(422)
+
+
+@app.route('/movies/<int:id>', methods=['DELETE'])
+def delete_movie(id):
+    movie = Movie.query.filter(Movie.id == id).one_or_none()
+    if movie is None:
+        abort(404)
+    else:
+        try:
+            movie.delete()
+            return jsonify({
+                'success': True,
+                'delete': id
             })
         except:
             abort(422)
