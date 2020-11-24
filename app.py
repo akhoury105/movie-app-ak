@@ -137,6 +137,22 @@ def update_actor(id):
             abort(422)
 
 
+@app.route('/actors/<int:id>', methods=['DELETE'])
+def delete_actor(id):
+    actor = Actor.query.filter(Actor.id == id).one_or_none()
+    if actor is None:
+        abort(404)
+    else:
+        try:
+            actor.delete()
+            return jsonify({
+                'success': True,
+                'delete': id
+            })
+        except:
+            abort(422)
+
+
 #ERROR HANDLERS
 @app.errorhandler(422)
 def unprocessable(error):
