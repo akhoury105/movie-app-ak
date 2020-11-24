@@ -13,6 +13,8 @@ app = create_app()
 
 
 #ENDPOINTS
+
+#MOVIES
 @app.route('/movies', methods=['GET'])
 def get_movies():
     selection = Movie.query.all()
@@ -21,6 +23,7 @@ def get_movies():
         'success': True,
         'movies': movies
     })
+
 
 @app.route('/movies', methods=['POST'])
 def add_movies():
@@ -42,6 +45,28 @@ def add_movies():
         abort(422)
 
 
+@app.route('/movies/<int:id>', methods=['PATCH'])
+def edit_movies(id):
+    body = request.get_json()
+    movie = Movie.query.filter(Movie.id == id).one_or_none()
+    if movie is None:
+        abort(404)
+    else:
+        if 'title' in body:
+            movie.title = body.get('title')
+        if 'release' in body:
+            movie.release = body.get('release')
+        try:
+            movie.update()
+            return jsonify({
+                'success': True,
+                'movie': movie.format()
+            })
+        except:
+            abort(422)
+
+
+#ACTORS
 @app.route('/actors', methods=['GET'])
 def get_actors():
     selection = Actor.query.all()
