@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request, abort
 from models import setup_db, Movie, Actor
+from auth import AuthError
 import json
 
 def create_app():
@@ -179,6 +180,12 @@ def bad_request(error):
         "error": 400,
         "message": "bad request"
     })
+
+
+#AuthError Handler
+@app.errorhandler(AuthError)
+def auth_error(AuthError):
+    return jsonify(AuthError.error), AuthError.status_code
 
 
 if __name__ == '__main__':
