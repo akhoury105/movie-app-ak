@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request, abort
 from models import setup_db, Movie, Actor
-from auth import AuthError, requires_auth_decorator
+from auth import AuthError, requires_auth
 import json
 
 def create_app():
@@ -17,8 +17,8 @@ app = create_app()
 
 #MOVIES
 @app.route('/movies', methods=['GET'])
-@requires_auth_decorator
-def get_movies(token):
+@requires_auth(permission='get:movies')
+def get_movies(payload):
     selection = Movie.query.all()
     movies = [movie.format() for movie in selection]
     return jsonify({
