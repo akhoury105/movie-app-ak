@@ -17,6 +17,11 @@ def setup_db(app, database_path=database_path):
     db.create_all()
 
 
+def db_drop_and_create_all():
+    db.drop_all()
+    db.create_all()
+
+
 '''
 Movie Class
 Contains title and date released

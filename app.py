@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request, abort
-from models import setup_db, Movie, Actor
+from models import setup_db, Movie, Actor, db_drop_and_create_all
 from auth import AuthError, requires_auth
 import json
 
@@ -11,6 +11,9 @@ def create_app():
     return app
 
 app = create_app()
+
+
+db_drop_and_create_all()
 
 
 #ENDPOINTS
@@ -28,7 +31,8 @@ def get_movies(payload):
 
 
 @app.route('/movies', methods=['POST'])
-def add_movies():
+@requires_auth(permission='post:movie')
+def add_movies(payload):
     body = {}
     body = request.get_json()
     if not body:
@@ -48,7 +52,8 @@ def add_movies():
 
 
 @app.route('/movies/<int:id>', methods=['PATCH'])
-def edit_movie(id):
+@requires_auth(permission='patch:movie')
+def edit_movie(payload, id):
     body = request.get_json()
     movie = Movie.query.filter(Movie.id == id).one_or_none()
     if movie is None:
@@ -69,7 +74,8 @@ def edit_movie(id):
 
 
 @app.route('/movies/<int:id>', methods=['DELETE'])
-def delete_movie(id):
+@requires_auth(permission='delete:movie')
+def delete_movie(payload, id):
     movie = Movie.query.filter(Movie.id == id).one_or_none()
     if movie is None:
         abort(404)
@@ -86,7 +92,8 @@ def delete_movie(id):
 
 #ACTORS
 @app.route('/actors', methods=['GET'])
-def get_actors():
+@requires_auth(permission='get:actors')
+def get_actors(payload):
     selection = Actor.query.all()
     actors = [actor.format() for actor in selection]
     return jsonify({
@@ -96,7 +103,8 @@ def get_actors():
 
 
 @app.route('/actors', methods=['POST'])
-def post_actor():
+@requires_auth(permission='post:actor')
+def post_actor(payload):
     body = {}
     body = request.get_json()
     if not body:
@@ -117,7 +125,8 @@ def post_actor():
 
 
 @app.route('/actors/<int:id>', methods=['PATCH'])
-def update_actor(id):
+@requires_auth(permission='patch:actor')
+def update_actor(payload, id):
     body = request.get_json()
     actor = Actor.query.filter(Actor.id == id).one_or_none()
     if actor is None:
@@ -140,7 +149,8 @@ def update_actor(id):
 
 
 @app.route('/actors/<int:id>', methods=['DELETE'])
-def delete_actor(id):
+@requires_auth(permission='delete:actor')
+def delete_actor(payload, id):
     actor = Actor.query.filter(Actor.id == id).one_or_none()
     if actor is None:
         abort(404)
