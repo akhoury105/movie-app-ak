@@ -17,29 +17,33 @@ class AuthError(Exception):
         self.status_code = status_code
 
 
+# Check for corrected formatted token
+
 def get_token_auth_header():
     if 'Authorization' not in request.headers:
         raise AuthError({
             'code': 'authorization_header_missing',
             'description': 'Authorization header is expected.'
-    }, 401)
+        }, 401)
     auth_header = request.headers.get('Authorization', None)
 
     headers_parts = auth_header.split(' ')
 
     if len(headers_parts) != 2:
         raise AuthError({
-        'code': 'invalid_header',
-        'description': 'Authorization header must be a bearer token.'
-    }, 401)
+            'code': 'invalid_header',
+            'description': 'Authorization header must be a bearer token.'
+        }, 401)
     elif headers_parts[0].lower() != 'bearer':
         raise AuthError({
-        'code': 'invalid_header',
-        'description': 'Authorization header must start with "Bearer".'
-    }, 401)
+            'code': 'invalid_header',
+            'description': 'Authorization header must start with "Bearer".'
+        }, 401)
 
     return headers_parts[1]
 
+
+# Verify Token is valid jwt
 
 def verify_decode_jwt(token):
     jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
@@ -90,26 +94,29 @@ def verify_decode_jwt(token):
                 'description': 'Unable to parse authentication token.'
             }, 400)
     raise AuthError({
-                'code': 'invalid_header',
+        'code': 'invalid_header',
                 'description': 'Unable to find the appropriate key.'
-            }, 400)
+    }, 400)
 
 
+# Check for permissions in payload
 def check_permissions(permission, payload):
     if 'permissions' not in payload:
         raise AuthError({
-        'code': 'invalid_claims',
-        'description': 'Permissions not included in JWT'
-    }, 400)
+            'code': 'invalid_claims',
+            'description': 'Permissions not included in JWT'
+        }, 400)
 
     if permission not in payload['permissions']:
         raise AuthError({
-        'code': 'unauthorized',
-        'description': 'Permission not found'
-    }, 403)
+            'code': 'unauthorized',
+            'description': 'Permission not found'
+        }, 403)
 
     return True
 
+
+# Custom app decorator for checking auth
 def requires_auth(permission=''):
     def requires_auth_decorator(f):
         @wraps(f)

@@ -16,6 +16,7 @@ def setup_db(app, database_path=database_path):
     db.init_app(app)
     db.create_all()
 
+# Drops and creates the Database for testing
 
 def db_drop_and_create_all():
     db.drop_all()
@@ -27,6 +28,8 @@ Movie Class
 Contains title and date released
 
 '''
+
+
 class Movie(db.Model):
     __tablename__ = 'movies'
 
@@ -56,11 +59,14 @@ class Movie(db.Model):
             'release': self.release
         }
 
+
 '''
 Actor Class
 Contains actor's name, birthdate, and gender
 
 '''
+
+
 class Actor(db.Model):
     __tablename__ = 'actors'
 
@@ -69,26 +75,21 @@ class Actor(db.Model):
     gender = Column(String)
     birthdate = Column(Date)
 
-
     def __init__(self, name, gender, birthdate):
         self.name = name
         self.gender = gender
         self.birthdate = birthdate
 
-
     def insert(self):
         db.session.add(self)
         db.session.commit()
 
-
     def update(self):
         db.session.commit()
 
-    
     def delete(self):
         db.session.delete(self)
         db.session.commit()
-
 
     def format(self):
         return{
