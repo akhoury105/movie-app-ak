@@ -15,7 +15,7 @@ def create_app():
 app = create_app()
 
 
-db_drop_and_create_all()
+#db_drop_and_create_all()
 
 
 # ENDPOINTS
