@@ -3,6 +3,7 @@ from models import setup_db, Movie, Actor, db_drop_and_create_all
 from auth import AuthError, requires_auth
 import json
 
+
 def create_app():
 
     app = Flask(__name__)
@@ -10,15 +11,16 @@ def create_app():
 
     return app
 
+
 app = create_app()
 
 
 db_drop_and_create_all()
 
 
-#ENDPOINTS
+# ENDPOINTS
 
-#MOVIES
+# MOVIES
 @app.route('/movies', methods=['GET'])
 @requires_auth(permission='get:movies')
 def get_movies(payload):
@@ -90,7 +92,7 @@ def delete_movie(payload, id):
             abort(422)
 
 
-#ACTORS
+# ACTORS
 @app.route('/actors', methods=['GET'])
 @requires_auth(permission='get:actors')
 def get_actors(payload):
@@ -165,7 +167,7 @@ def delete_actor(payload, id):
             abort(422)
 
 
-#ERROR HANDLERS
+# ERROR HANDLERS
 @app.errorhandler(422)
 def unprocessable(error):
     return jsonify({
@@ -193,7 +195,7 @@ def bad_request(error):
     })
 
 
-#AuthError Handler
+# AuthError Handler
 @app.errorhandler(AuthError)
 def auth_error(AuthError):
     return jsonify(AuthError.error), AuthError.status_code
