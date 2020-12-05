@@ -4,14 +4,11 @@ from auth import AuthError, requires_auth
 import json
 
 
-def create_app(test_config=None):
+def create_app():
 
     app = Flask(__name__)
     setup_db(app)
-
-
-    #db_drop_and_create_all()
-
+    # db_drop_and_create_all()
 
     # ENDPOINTS
 
@@ -25,7 +22,6 @@ def create_app(test_config=None):
             'success': True,
             'movies': movies
         })
-
 
     @app.route('/movies', methods=['POST'])
     @requires_auth(permission='post:movie')
@@ -46,7 +42,6 @@ def create_app(test_config=None):
             })
         except:
             abort(422)
-
 
     @app.route('/movies/<int:id>', methods=['PATCH'])
     @requires_auth(permission='patch:movie')
@@ -69,7 +64,6 @@ def create_app(test_config=None):
             except:
                 abort(422)
 
-
     @app.route('/movies/<int:id>', methods=['DELETE'])
     @requires_auth(permission='delete:movie')
     def delete_movie(payload, id):
@@ -86,8 +80,8 @@ def create_app(test_config=None):
             except:
                 abort(422)
 
-
     # ACTORS
+
     @app.route('/actors', methods=['GET'])
     @requires_auth(permission='get:actors')
     def get_actors(payload):
@@ -97,7 +91,6 @@ def create_app(test_config=None):
             'success': True,
             'actors': actors
         })
-
 
     @app.route('/actors', methods=['POST'])
     @requires_auth(permission='post:actor')
@@ -119,7 +112,6 @@ def create_app(test_config=None):
             })
         except:
             abort(422)
-
 
     @app.route('/actors/<int:id>', methods=['PATCH'])
     @requires_auth(permission='patch:actor')
@@ -144,7 +136,6 @@ def create_app(test_config=None):
             except:
                 abort(422)
 
-
     @app.route('/actors/<int:id>', methods=['DELETE'])
     @requires_auth(permission='delete:actor')
     def delete_actor(payload, id):
@@ -161,8 +152,8 @@ def create_app(test_config=None):
             except:
                 abort(422)
 
-
     # ERROR HANDLERS
+
     @app.errorhandler(422)
     def unprocessable(error):
         return jsonify({
@@ -170,7 +161,6 @@ def create_app(test_config=None):
             "error": 422,
             "message": "unprocessable"
         }), 422
-
 
     @app.errorhandler(404)
     def not_found(error):
@@ -180,7 +170,6 @@ def create_app(test_config=None):
             "message": "resource not found"
         }), 404
 
-
     @app.errorhandler(400)
     def bad_request(error):
         return jsonify({
@@ -189,12 +178,11 @@ def create_app(test_config=None):
             "message": "bad request"
         })
 
-
     # AuthError Handler
+
     @app.errorhandler(AuthError)
     def auth_error(AuthError):
         return jsonify(AuthError.error), AuthError.status_code
-
 
     return app
 
